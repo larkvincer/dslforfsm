@@ -21,7 +21,6 @@ func New(collector TokenCollector) *Lexer {
 func (lexer *Lexer) Lex(source string) {
 	lineNumber := 1
 	lines := strings.Split(source, "\n")
-
 	for _, line := range lines {
 		lexer.lexLine(line)
 		lineNumber++
@@ -42,18 +41,28 @@ func (lexer *Lexer) lexToken(line string) {
 }
 
 func (lexer *Lexer) findToken(line string) bool {
-	return lexer.findWhiteSpace(line) || lexer.findSingleCharacteToken(line) || lexer.findName(line)
+	return lexer.findSkipSpace(line) || lexer.findSingleCharacterToken(line) || lexer.findName(line)
 }
 
-func (lexer *Lexer) findWhiteSpace(line string) bool {
+func (lexer *Lexer) findSkipSpace(line string) bool {
 	whiteSpacePattern := regexp.MustCompile("^\\s+")
 	commentPattern := regexp.MustCompile("^//.*$")
-	substring := string(line[lexer.readPosition])
+  substring := string(line[lexer.readPosition:])
 
-	return commentPattern.MatchString(substring) || whiteSpacePattern.MatchString(substring)
+	if commentPattern.MatchString(substring) {
+		lexer.readPosition += commentPattern.FindStringIndex(substring)[1]
+		return true
+	}
+
+	if whiteSpacePattern.MatchString(substring) {
+		lexer.readPosition += whiteSpacePattern.FindStringIndex(substring)[1]
+		return true
+	}
+
+	return false
 }
 
-func (lexer *Lexer) findSingleCharacteToken(line string) bool {
+func (lexer *Lexer) findSingleCharacterToken(line string) bool {
 	char := line[lexer.readPosition : lexer.readPosition+1]
 	switch char {
 	case tokens.LCURLY:
@@ -83,6 +92,7 @@ func (lexer *Lexer) findSingleCharacteToken(line string) bool {
 	default:
 		return false
 	}
+	lexer.readPosition++
 	return true
 }
 
