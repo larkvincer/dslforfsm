@@ -39,7 +39,7 @@ func TestComments(t *testing.T) {
 	runLexerTestTable(testTable, t)
 }
 
-func IntegrationTests(t *testing.T) {
+func TestIntegration(t *testing.T) {
 	testTable := []testInputs{
 		{input: "{}", want: "openBrace,closeBrace"},
 		{input: "{name name *}()<> .",
