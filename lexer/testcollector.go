@@ -17,42 +17,42 @@ func (collector *TestCollector) addToken(token string) {
 	collector.firstToken = false
 }
 
-func (collector *TestCollector) openBrace(lineNumber int, position int) {
+func (collector *TestCollector) OpenBrace(lineNumber int, position int) {
 	collector.addToken("openBrace")
 }
 
-func (collector *TestCollector) closeBrace(lineNumber int, position int) {
+func (collector *TestCollector) CloseBrace(lineNumber int, position int) {
 	collector.addToken("closeBrace")
 }
 
-func (collector *TestCollector) openParen(lineNumber int, position int) {
+func (collector *TestCollector) OpenParen(lineNumber int, position int) {
 	collector.addToken("openParen")
 }
 
-func (collector *TestCollector) closeParen(lineNumber int, position int) {
+func (collector *TestCollector) CloseParen(lineNumber int, position int) {
 	collector.addToken("closeParen")
 }
 
-func (collector *TestCollector) openAngle(lineNumber int, position int) {
+func (collector *TestCollector) OpenAngle(lineNumber int, position int) {
 	collector.addToken("openAngle")
 }
 
-func (collector *TestCollector) closeAngle(lineNumber int, position int) {
+func (collector *TestCollector) CloseAngle(lineNumber int, position int) {
 	collector.addToken("closeAngle")
 }
 
-func (collector *TestCollector) star(lineNumber int, position int) {
+func (collector *TestCollector) Star(lineNumber int, position int) {
 	collector.addToken("star")
 }
 
-func (collector *TestCollector) colon(lineNumber int, position int) {
+func (collector *TestCollector) Colon(lineNumber int, position int) {
 	collector.addToken("colon")
 }
 
-func (collector *TestCollector) name(name string, lineNumber int, position int) {
+func (collector *TestCollector) Name(name string, lineNumber int, position int) {
 	collector.addToken("#" + name + "#")
 }
 
-func (collector *TestCollector) error(lineNumber int, position int) {
+func (collector *TestCollector) Error(lineNumber int, position int) {
 	collector.addToken("error")
 }

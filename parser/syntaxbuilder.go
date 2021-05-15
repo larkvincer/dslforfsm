@@ -1,0 +1,27 @@
+package parser
+
+type SyntaxBuilder interface {
+	newHeaderWithName()
+	addHeaderWithValue()
+	setStateName()
+	done()
+	setSuperStateName()
+	setEvent()
+	setNullEvent()
+	setEntryAction()
+	setExitAction()
+	setStateBase()
+	setNextState()
+	setNullNextState()
+	transitionWithAction()
+	transitionNullAction()
+	addAction()
+	transitionWithActions()
+	headerError(state, event string, lineNumber, position int)
+	stateSpecError(state, event string, lineNumber, position int)
+	transitionError(state, event string, lineNumber, position int)
+	transitionGroupError(state, event string, lineNumber, position int)
+	endError(state, event string, lineNumber, position int)
+	syntaxError(lineNumber, position int)
+	setName(name string)
+}

@@ -35,7 +35,7 @@ func (lexer *Lexer) lexLine(line string) {
 
 func (lexer *Lexer) lexToken(line string) {
 	if !lexer.findToken(line) {
-		lexer.collector.error(lexer.lineNumber, lexer.readPosition+1)
+		lexer.collector.Error(lexer.lineNumber, lexer.readPosition+1)
 		lexer.readPosition++
 	}
 }
@@ -66,28 +66,28 @@ func (lexer *Lexer) findSingleCharacterToken(line string) bool {
 	char := line[lexer.readPosition : lexer.readPosition+1]
 	switch char {
 	case tokens.OPEN_BRACE:
-		lexer.collector.openBrace(lexer.lineNumber, lexer.readPosition)
+		lexer.collector.OpenBrace(lexer.lineNumber, lexer.readPosition)
 		break
 	case tokens.CLOSE_BRACE:
-		lexer.collector.closeBrace(lexer.lineNumber, lexer.readPosition)
+		lexer.collector.CloseBrace(lexer.lineNumber, lexer.readPosition)
 		break
 	case tokens.OPEN_PAREN:
-		lexer.collector.openParen(lexer.lineNumber, lexer.readPosition)
+		lexer.collector.OpenParen(lexer.lineNumber, lexer.readPosition)
 		break
 	case tokens.CLOSE_PAREN:
-		lexer.collector.closeParen(lexer.lineNumber, lexer.readPosition)
+		lexer.collector.CloseParen(lexer.lineNumber, lexer.readPosition)
 		break
 	case tokens.ENTRY_STATE:
-		lexer.collector.openAngle(lexer.lineNumber, lexer.readPosition)
+		lexer.collector.OpenAngle(lexer.lineNumber, lexer.readPosition)
 		break
 	case tokens.EXIT_STATE:
-		lexer.collector.closeAngle(lexer.lineNumber, lexer.readPosition)
+		lexer.collector.CloseAngle(lexer.lineNumber, lexer.readPosition)
 		break
 	case tokens.STAR:
-		lexer.collector.star(lexer.lineNumber, lexer.readPosition)
+		lexer.collector.Star(lexer.lineNumber, lexer.readPosition)
 		break
 	case tokens.COLON:
-		lexer.collector.colon(lexer.lineNumber, lexer.readPosition)
+		lexer.collector.Colon(lexer.lineNumber, lexer.readPosition)
 		break
 	default:
 		return false
@@ -100,7 +100,7 @@ func (lexer *Lexer) findName(line string) bool {
 	namePattern := regexp.MustCompile("^\\w+")
 	substring := line[lexer.readPosition:]
 	if namePattern.MatchString(substring) {
-		lexer.collector.name(namePattern.FindString(substring), lexer.lineNumber, lexer.readPosition)
+		lexer.collector.Name(namePattern.FindString(substring), lexer.lineNumber, lexer.readPosition)
 		lexer.readPosition += namePattern.FindStringIndex(substring)[1]
 		return true
 	}
