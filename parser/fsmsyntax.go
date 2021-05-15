@@ -4,7 +4,7 @@ import "fmt"
 
 type FsmSyntax struct {
 	Headers []header
-	Logic   []transition
+	Logic   []*transition
 	Errors  []syntaxError
 	Done    bool
 }
@@ -52,7 +52,7 @@ func (fsmSyntax *FsmSyntax) formatHeaders() string {
 	formattedHeaders := ""
 	// fmt.Println(fsmSyntax.Headers)
 	for _, h := range fsmSyntax.Headers {
-		formattedHeaders += formatHeader(h)
+		formattedHeaders += formatHeader(&h)
 	}
 	return formattedHeaders
 }
@@ -66,14 +66,13 @@ func (fsmSyntax *FsmSyntax) formatLogic() string {
 
 func (fsmSyntax *FsmSyntax) formatTransitions() string {
 	transitions := ""
-	fmt.Println(fsmSyntax.Logic)
 	for _, trans := range fsmSyntax.Logic {
 		transitions += formatTransition(trans)
 	}
 	return transitions
 }
 
-func formatTransition(trans transition) string {
+func formatTransition(trans *transition) string {
 	return fmt.Sprintf("  %s %s\n", formatStateName(trans.State), formatSubTransitions(trans))
 }
 
@@ -81,7 +80,7 @@ func (fsmSyntax *FsmSyntax) formatErrors() string {
 	return ""
 }
 
-func formatHeader(h header) string {
+func formatHeader(h *header) string {
 	return fmt.Sprintf("%s:%s\n", h.Name, h.Value)
 }
 
@@ -105,7 +104,7 @@ func getStateFormatter(isAbstract bool) string {
 	return "%s"
 }
 
-func formatSubTransitions(trans transition) string {
+func formatSubTransitions(trans *transition) string {
 	if len(trans.SubTransitions) == 1 {
 		return formatSubTransition(trans.SubTransitions[0])
 	}

@@ -21,19 +21,19 @@ func main() {
 	// 	Unlocked  Pass    Locked      lock
 	// }`
 
-	// const sourceInput = `Initial: Locked
-	// FSM: Turnstile
-	// {
-	//   Locked    {
-	//     Coin    Unlocked    unlock
-	//     Pass    Locked      alarm
-	//   }
-	//   Unlocked  {
-	//     Coin    Unlocked    thankyou
-	//     Pass    Locked      lock
-	//   }
-	// }`
-	const sourceInput = "{ s e ns a }"
+	const sourceInput = `Initial: Locked
+	FSM: Turnstile
+	{
+	  Locked    {
+	    Coin    Unlocked    unlock
+	    Pass    Locked      alarm
+	  }
+	  Unlocked  {
+	    Coin    Unlocked    thankyou
+	    Pass    Locked      lock
+	  }
+	}`
+	// const sourceInput = "{ s e ns a }"
 	syntaxBuilder := parser.NewFsmSyntaxBuilder()
 	parser := parser.NewParser(syntaxBuilder)
 	lexer := lexer.New(parser)

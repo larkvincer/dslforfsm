@@ -5,7 +5,7 @@ import (
 )
 
 type FsmSyntaxBuilder struct {
-	fsmSyntax     FsmSyntax
+	fsmSyntax     *FsmSyntax
 	header        header
 	parsedName    string
 	transition    transition
@@ -13,7 +13,7 @@ type FsmSyntaxBuilder struct {
 }
 
 func NewFsmSyntaxBuilder() *FsmSyntaxBuilder {
-	return &FsmSyntaxBuilder{fsmSyntax: FsmSyntax{}}
+	return &FsmSyntaxBuilder{fsmSyntax: &FsmSyntax{}}
 }
 
 func (fsm *FsmSyntaxBuilder) newHeaderWithName() {
@@ -27,7 +27,7 @@ func (fsm *FsmSyntaxBuilder) addHeaderWithValue() {
 
 func (fsm *FsmSyntaxBuilder) setStateName() {
 	fsm.transition = transition{State: stateSpec{Name: fsm.parsedName}}
-	fsm.fsmSyntax.Logic = append(fsm.fsmSyntax.Logic, fsm.transition)
+	fsm.fsmSyntax.Logic = append(fsm.fsmSyntax.Logic, &fsm.transition)
 }
 
 func (fsm *FsmSyntaxBuilder) done() {
@@ -70,6 +70,7 @@ func (fsm *FsmSyntaxBuilder) setNullNextState() {
 func (fsm *FsmSyntaxBuilder) transitionWithAction() {
 	fsm.subTransition.Actions = append(fsm.subTransition.Actions, fsm.parsedName)
 	fsm.transition.SubTransitions = append(fsm.transition.SubTransitions, fsm.subTransition)
+	// fmt.Printf("%v", fsm.fsmSyntax)
 }
 
 func (fsm *FsmSyntaxBuilder) transitionNullAction() {
