@@ -44,13 +44,23 @@ type syntaxError struct {
 	Position   int
 }
 
-func (fsmSyntax *FsmSyntax) String() string {
-	return fsmSyntax.formatHeaders() + fsmSyntax.formatLogic() + fsmSyntax.formatErrors()
+func (fsmSyntax *FsmSyntax) String() (result string) {
+	result = fsmSyntax.formatHeaders() + fsmSyntax.formatLogic()
+	if fsmSyntax.Done {
+		result += ".\n"
+	} else {
+		result += fsmSyntax.formatErrors()
+	}
+
+	return
+}
+
+func (fsmSyntax *FsmSyntax) GetErrors() string {
+	return fsmSyntax.formatErrors()
 }
 
 func (fsmSyntax *FsmSyntax) formatHeaders() string {
 	formattedHeaders := ""
-	// fmt.Println(fsmSyntax.Headers)
 	for _, h := range fsmSyntax.Headers {
 		formattedHeaders += formatHeader(&h)
 	}
@@ -77,7 +87,14 @@ func formatTransition(trans *transition) string {
 }
 
 func (fsmSyntax *FsmSyntax) formatErrors() string {
+	if len(fsmSyntax.Errors) > 0 {
+		return formatError(fsmSyntax.Errors[0])
+	}
 	return ""
+}
+
+func formatError(error syntaxError) string {
+	return fmt.Sprintf("Syntax error: %s. %s. line %d, position %d.\n", error.Type, error.Message, error.LineNumber, error.Position)
 }
 
 func formatHeader(h *header) string {
@@ -118,7 +135,15 @@ func formatSubTransitions(trans *transition) string {
 }
 
 func formatSubTransition(subTrans subTransition) string {
-	return fmt.Sprintf("%s %s %s", subTrans.Event, subTrans.NextState, formatActions(subTrans))
+	return fmt.Sprintf("%s %s %s", formatEventOrState(subTrans.Event), formatEventOrState(subTrans.NextState), formatActions(subTrans))
+}
+
+func formatEventOrState(eventOrState string) string {
+	if eventOrState == "" {
+		return "*"
+	} else {
+		return eventOrState
+	}
 }
 
 func formatActions(subTrans subTransition) string {
@@ -136,6 +161,6 @@ func formatActions(subTrans subTransition) string {
 			}
 		}
 
-		return actions
+		return actions + "}"
 	}
 }

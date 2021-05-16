@@ -62,31 +62,29 @@ func (parser *Parser) HandleEvent(event string, line, position int) {
 
 func (parser *Parser) handleEventError(event string, lineNumber, position int) {
 	switch parser.state {
-	case events.HEADER:
-	case events.HEADER_COLON:
-	case events.HEADER_VALUE:
+	case events.HEADER, events.HEADER_COLON, events.HEADER_VALUE:
 		(*parser.syntaxBuilder).headerError(parser.state, event, lineNumber, position)
 
-	case events.STATE_SPEC:
-	case events.SUPER_STATE_NAME:
-	case events.SUPER_STATE_CLOSE:
-	case events.STATE_MODIFIER:
-	case events.EXIT_ACTION:
-	case events.ENTRY_ACTION:
-	case events.STATE_BASE:
+	case events.STATE_SPEC,
+		events.SUPER_STATE_NAME,
+		events.SUPER_STATE_CLOSE,
+		events.STATE_MODIFIER,
+		events.EXIT_ACTION,
+		events.ENTRY_ACTION,
+		events.STATE_BASE:
 		(*parser.syntaxBuilder).stateSpecError(parser.state, event, lineNumber, position)
 
-	case events.SINGLE_EVENT:
-	case events.SINGLE_NEXT_STATE:
-	case events.SINGLE_ACTION_GROUP:
-	case events.SINGLE_ACTION_GROUP_NAME:
+	case events.SINGLE_EVENT,
+		events.SINGLE_NEXT_STATE,
+		events.SINGLE_ACTION_GROUP,
+		events.SINGLE_ACTION_GROUP_NAME:
 		(*parser.syntaxBuilder).transitionError(parser.state, event, lineNumber, position)
 
-	case events.SUBTRANSITION_GROUP:
-	case events.GROUP_EVENT:
-	case events.GROUP_NEXT_STATE:
-	case events.GROUP_ACTION_GROUP:
-	case events.GROUP_ACTION_GROUP_NAME:
+	case events.SUBTRANSITION_GROUP,
+		events.GROUP_EVENT,
+		events.GROUP_NEXT_STATE,
+		events.GROUP_ACTION_GROUP,
+		events.GROUP_ACTION_GROUP_NAME:
 		(*parser.syntaxBuilder).transitionGroupError(parser.state, event, lineNumber, position)
 
 	case events.END:
