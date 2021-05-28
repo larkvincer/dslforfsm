@@ -3,27 +3,31 @@ package parser
 import "fmt"
 
 type FsmSyntax struct {
-	Headers []header
-	Logic   []*transition
+	Headers []Header
+	Logic   []*FsmTransition
 	Errors  []syntaxError
 	Done    bool
 }
 
-type header struct {
+type Header struct {
 	Name  string
 	Value string
 }
 
-func nullHeader() header {
-	return header{"", ""}
+func (header *Header) String() string {
+	return header.Name + ": " + header.Value
 }
 
-type transition struct {
+func NullHeader() Header {
+	return Header{"", ""}
+}
+
+type FsmTransition struct {
 	State          stateSpec
-	SubTransitions []subTransition
+	SubTransitions []SubTransition
 }
 
-type subTransition struct {
+type SubTransition struct {
 	Event     string
 	NextState string
 	Actions   []string
@@ -82,7 +86,7 @@ func (fsmSyntax *FsmSyntax) formatTransitions() string {
 	return transitions
 }
 
-func formatTransition(trans *transition) string {
+func formatTransition(trans *FsmTransition) string {
 	return fmt.Sprintf("  %s %s\n", formatStateName(trans.State), formatSubTransitions(trans))
 }
 
@@ -97,7 +101,7 @@ func formatError(error syntaxError) string {
 	return fmt.Sprintf("Syntax error: %s. %s. line %d, position %d.\n", error.Type, error.Message, error.LineNumber, error.Position)
 }
 
-func formatHeader(h *header) string {
+func formatHeader(h *Header) string {
 	return fmt.Sprintf("%s:%s\n", h.Name, h.Value)
 }
 
@@ -121,7 +125,7 @@ func getStateFormatter(isAbstract bool) string {
 	return "%s"
 }
 
-func formatSubTransitions(trans *transition) string {
+func formatSubTransitions(trans *FsmTransition) string {
 	if len(trans.SubTransitions) == 1 {
 		return formatSubTransition(trans.SubTransitions[0])
 	}
@@ -134,7 +138,7 @@ func formatSubTransitions(trans *transition) string {
 	return formattedSubTransitions + "  }"
 }
 
-func formatSubTransition(subTrans subTransition) string {
+func formatSubTransition(subTrans SubTransition) string {
 	return fmt.Sprintf("%s %s %s", formatEventOrState(subTrans.Event), formatEventOrState(subTrans.NextState), formatActions(subTrans))
 }
 
@@ -146,7 +150,7 @@ func formatEventOrState(eventOrState string) string {
 	}
 }
 
-func formatActions(subTrans subTransition) string {
+func formatActions(subTrans SubTransition) string {
 	if len(subTrans.Actions) == 1 {
 		return subTrans.Actions[0]
 	} else {

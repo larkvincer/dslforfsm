@@ -6,18 +6,26 @@ import (
 
 type FsmSyntaxBuilder struct {
 	fsmSyntax     *FsmSyntax
-	header        header
+	header        Header
 	parsedName    string
-	transition    *transition
-	subTransition subTransition
+	transition    *FsmTransition
+	subTransition SubTransition
 }
 
 func NewFsmSyntaxBuilder() *FsmSyntaxBuilder {
 	return &FsmSyntaxBuilder{fsmSyntax: &FsmSyntax{}}
 }
 
+func (fsm *FsmSyntaxBuilder) String() string {
+	return fsm.fsmSyntax.String()
+}
+
+func (fsm *FsmSyntaxBuilder) GetFSM() *FsmSyntax {
+	return fsm.fsmSyntax
+}
+
 func (fsm *FsmSyntaxBuilder) newHeaderWithName() {
-	fsm.header = header{Name: fsm.parsedName}
+	fsm.header = Header{Name: fsm.parsedName}
 }
 
 func (fsm *FsmSyntaxBuilder) addHeaderWithValue() {
@@ -26,7 +34,7 @@ func (fsm *FsmSyntaxBuilder) addHeaderWithValue() {
 }
 
 func (fsm *FsmSyntaxBuilder) setStateName() {
-	fsm.transition = &transition{State: stateSpec{Name: fsm.parsedName}}
+	fsm.transition = &FsmTransition{State: stateSpec{Name: fsm.parsedName}}
 	fsm.fsmSyntax.Logic = append(fsm.fsmSyntax.Logic, fsm.transition)
 }
 
@@ -40,11 +48,11 @@ func (fsm *FsmSyntaxBuilder) setSuperStateName() {
 }
 
 func (fsm *FsmSyntaxBuilder) setEvent() {
-	fsm.subTransition = subTransition{Event: fsm.parsedName}
+	fsm.subTransition = SubTransition{Event: fsm.parsedName}
 }
 
 func (fsm *FsmSyntaxBuilder) setNullEvent() {
-	fsm.subTransition = subTransition{Event: ""}
+	fsm.subTransition = SubTransition{Event: ""}
 }
 
 func (fsm *FsmSyntaxBuilder) setEntryAction() {
@@ -109,8 +117,4 @@ func (fsm *FsmSyntaxBuilder) syntaxError(lineNumber, position int) {
 
 func (fsm *FsmSyntaxBuilder) setName(name string) {
 	fsm.parsedName = name
-}
-
-func (fsm *FsmSyntaxBuilder) String() string {
-	return fsm.fsmSyntax.String()
 }
