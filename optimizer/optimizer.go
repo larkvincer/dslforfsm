@@ -31,10 +31,10 @@ func Optimize(ast semanticanalyzer.SemanticStateMachine) *OptimizedStateMachine 
 }
 
 func (optimizer *Optimizer) addHeader(ast semanticanalyzer.SemanticStateMachine) {
-	optimizer.optimizedStateMachine.header = Header{}
-	optimizer.optimizedStateMachine.header.Fsm = ast.FsmName
-	optimizer.optimizedStateMachine.header.Initial = ast.InitialState.Name
-	optimizer.optimizedStateMachine.header.Actions = ast.ActionClass
+	optimizer.optimizedStateMachine.Header = Header{}
+	optimizer.optimizedStateMachine.Header.Fsm = ast.FsmName
+	optimizer.optimizedStateMachine.Header.Initial = ast.InitialState.Name
+	optimizer.optimizedStateMachine.Header.Actions = ast.ActionClass
 }
 
 func (optimizer *Optimizer) addLists() {
@@ -46,7 +46,7 @@ func (optimizer *Optimizer) addLists() {
 func (optimizer *Optimizer) addStates() {
 	for _, state := range optimizer.semanticStateMachine.States {
 		if !state.AbstractState {
-			optimizer.optimizedStateMachine.states = append(optimizer.optimizedStateMachine.states, state.Name)
+			optimizer.optimizedStateMachine.States = append(optimizer.optimizedStateMachine.States, state.Name)
 		}
 	}
 }
@@ -56,8 +56,8 @@ func (optimizer *Optimizer) addEvents() {
 		events = append(events, event)
 	}
 
-	optimizer.optimizedStateMachine.events = append(
-		optimizer.optimizedStateMachine.events,
+	optimizer.optimizedStateMachine.Events = append(
+		optimizer.optimizedStateMachine.Events,
 		events...,
 	)
 }
@@ -68,8 +68,8 @@ func (optimizer *Optimizer) addActions() {
 		actions = append(actions, action)
 	}
 
-	optimizer.optimizedStateMachine.actions = append(
-		optimizer.optimizedStateMachine.actions,
+	optimizer.optimizedStateMachine.Actions = append(
+		optimizer.optimizedStateMachine.Actions,
 		actions...,
 	)
 }
@@ -120,8 +120,8 @@ func (so *StateOptimizer) addTransitionsForState() {
 	transition := Transition{}
 	transition.CurrentState = so.currentState.Name
 	so.addSubTransitions(&transition)
-	so.optimizer.optimizedStateMachine.transitions = append(
-		so.optimizer.optimizedStateMachine.transitions,
+	so.optimizer.optimizedStateMachine.Transitions = append(
+		so.optimizer.optimizedStateMachine.Transitions,
 		transition,
 	)
 }

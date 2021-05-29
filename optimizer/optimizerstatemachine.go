@@ -3,11 +3,11 @@ package optimizer
 import "fmt"
 
 type OptimizedStateMachine struct {
-	states      []string
-	events      []string
-	actions     []string
-	header      Header
-	transitions []Transition
+	States      []string
+	Events      []string
+	Actions     []string
+	Header      Header
+	Transitions []Transition
 }
 
 func (osm *OptimizedStateMachine) String() string {
@@ -15,13 +15,13 @@ func (osm *OptimizedStateMachine) String() string {
 	transitionsString = transitionsString[0 : len(transitionsString)-2]
 	return fmt.Sprintf(
 		"Initial %s\nFsm: %s\nActions:%s\n{\n  %s\n",
-		osm.header.Initial, osm.header.Fsm, osm.header.Actions, transitionsString,
+		osm.Header.Initial, osm.Header.Fsm, osm.Header.Actions, transitionsString,
 	)
 }
 
 func (osm *OptimizedStateMachine) transitionsToString() string {
 	result := ""
-	for _, transition := range osm.transitions {
+	for _, transition := range osm.Transitions {
 		result += transition.String()
 	}
 	return result

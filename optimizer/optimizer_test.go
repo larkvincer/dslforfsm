@@ -12,42 +12,42 @@ func TestBasicOptimizationsFunctions(t *testing.T) {
 	t.Run("header", func(t *testing.T) {
 
 		osm := produceStateMachineWithHeader("{i e i *}")
-		if osm.header.Fsm != "f" {
-			t.Fatalf("expected header 'f', but got %s", osm.header.Fsm)
+		if osm.Header.Fsm != "f" {
+			t.Fatalf("expected header 'f', but got %s", osm.Header.Fsm)
 		}
-		if osm.header.Initial != "i" {
-			t.Fatalf("expected header 'i', but got %s", osm.header.Initial)
+		if osm.Header.Initial != "i" {
+			t.Fatalf("expected header 'i', but got %s", osm.Header.Initial)
 		}
-		if osm.header.Actions != "a" {
-			t.Fatalf("expected header 'a', but got %s", osm.header.Actions)
+		if osm.Header.Actions != "a" {
+			t.Fatalf("expected header 'a', but got %s", osm.Header.Actions)
 		}
 	})
 
 	t.Run("state as preserved", func(t *testing.T) {
 		osm := produceStateMachineWithHeader("{i e s * s e i *}")
-		if !contains(osm.states, "i", "s") {
-			t.Fatalf("expected to have i, s states, but got %s", osm.states)
+		if !contains(osm.States, "i", "s") {
+			t.Fatalf("expected to have i, s states, but got %s", osm.States)
 		}
 	})
 
 	t.Run("abstract states are removed", func(t *testing.T) {
 		osm := produceStateMachineWithHeader("{(b) * * * i:b e i *}")
-		if contains(osm.states, "b") {
-			t.Fatalf("not expect abstact state 'b', but got %s", osm.states)
+		if contains(osm.States, "b") {
+			t.Fatalf("not expect abstact state 'b', but got %s", osm.States)
 		}
 	})
 
 	t.Run("events are preserved", func(t *testing.T) {
 		osm := produceStateMachineWithHeader("{i e1 s * s e2 i *}")
-		if !contains(osm.events, "e1", "e2") {
-			t.Fatalf("expect events 'e1', 'e2', but got %s", osm.events)
+		if !contains(osm.Events, "e1", "e2") {
+			t.Fatalf("expect events 'e1', 'e2', but got %s", osm.Events)
 		}
 	})
 
 	t.Run("actions are preserved", func(t *testing.T) {
 		osm := produceStateMachineWithHeader("{i e1 s a1 s e2 i a2}")
-		if !contains(osm.actions, "a1", "a2") {
-			t.Fatalf("expect actions 'a1', 'a2', but got %s", osm.actions)
+		if !contains(osm.Actions, "a1", "a2") {
+			t.Fatalf("expect actions 'a1', 'a2', but got %s", osm.Actions)
 		}
 	})
 
@@ -62,8 +62,8 @@ func TestBasicOptimizationsFunctions(t *testing.T) {
 				"  e i {a1}\n"+
 				"}\n",
 		)
-		if len(osm.transitions) != 1 {
-			t.Fatalf("expect to have 1 transition, but got %d", len(osm.transitions))
+		if len(osm.Transitions) != 1 {
+			t.Fatalf("expect to have 1 transition, but got %d", len(osm.Transitions))
 		}
 	})
 }
