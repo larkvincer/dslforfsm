@@ -1,68 +1,68 @@
 package nscgenerator
 
 type NSCNode interface {
-	Accept(visitor *NSCNodeVisitor)
+	Accept(visitor NSCNodeVisitor)
 }
 
 type SwitchCaseNode struct {
-	variableName string
-	caseNodes    []NSCNode
+	VariableName string
+	CaseNodes    []NSCNode
 }
 
 func NewSwitchCaseNode(variableName string) *SwitchCaseNode {
 	return &SwitchCaseNode{
-		variableName: variableName,
+		VariableName: variableName,
 	}
 }
 
-func (scn *SwitchCaseNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitSwitchCaseNode(scn)
+func (scn *SwitchCaseNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitSwitchCaseNode(scn)
 }
 
 func (scn *SwitchCaseNode) GenerateCases(visitor NSCNodeVisitor) {
-	for _, cn := range scn.caseNodes {
-		cn.Accept(&visitor)
+	for _, cn := range scn.CaseNodes {
+		cn.Accept(visitor)
 	}
 }
 
 type CaseNode struct {
-	switchName     string
-	caseName       string
-	caseActionNode NSCNode
+	SwitchName     string
+	CaseName       string
+	CaseActionNode NSCNode
 }
 
 func NewCaseNode(switchName, caseName string) *CaseNode {
 	return &CaseNode{
-		switchName: switchName,
-		caseName:   caseName,
+		SwitchName: switchName,
+		CaseName:   caseName,
 	}
 }
 
-func (cn *CaseNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitCaseNode(cn)
+func (cn *CaseNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitCaseNode(cn)
 }
 
 type FunctionCallNode struct {
-	functionName string
-	argument     NSCNode
+	FunctionName string
+	Argument     NSCNode
 }
 
 func NewFunctionCallNode(functionName string, argument NSCNode) *FunctionCallNode {
 	return &FunctionCallNode{
-		functionName: functionName,
-		argument:     argument,
+		FunctionName: functionName,
+		Argument:     argument,
 	}
 }
 
-func (fcn *FunctionCallNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitFunctionalCallNode(fcn)
+func (fcn *FunctionCallNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitFunctionalCallNode(fcn)
 }
 
 type CompositeNode struct {
 	nodes []NSCNode
 }
 
-func (cn *CompositeNode) Accept(visitor *NSCNodeVisitor) {
+func (cn *CompositeNode) Accept(visitor NSCNodeVisitor) {
 	for _, node := range cn.nodes {
 		node.Accept(visitor)
 	}
@@ -73,92 +73,92 @@ func (cn *CompositeNode) Add(node NSCNode) {
 }
 
 type EnumNode struct {
-	name        string
-	enumerators []string
+	Name        string
+	Enumerators []string
 }
 
 func NewEnumNode(name string, enumerators []string) *EnumNode {
 	return &EnumNode{
-		name:        name,
-		enumerators: enumerators,
+		Name:        name,
+		Enumerators: enumerators,
 	}
 }
 
-func (en *EnumNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitEnumNode(en)
+func (en *EnumNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitEnumNode(en)
 }
 
 type StatePropertyNode struct {
-	initialState string
+	InitialState string
 }
 
 func NewStatePropertyNode(initialState string) *StatePropertyNode {
 	return &StatePropertyNode{
-		initialState: initialState,
+		InitialState: initialState,
 	}
 }
 
-func (spn *StatePropertyNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitStatePropertyNode(spn)
+func (spn *StatePropertyNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitStatePropertyNode(spn)
 }
 
 type EventDelegatorsNode struct {
-	events []string
+	Events []string
 }
 
 func NewEventDelegatorsNode(events []string) *EventDelegatorsNode {
 	return &EventDelegatorsNode{
-		events: events,
+		Events: events,
 	}
 }
 
-func (evn *EventDelegatorsNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitEventDelegatorsNode(evn)
+func (evn *EventDelegatorsNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitEventDelegatorsNode(evn)
 }
 
 type FSMClassNode struct {
-	delegators    *EventDelegatorsNode
-	eventEnum     *EnumNode
-	stateEnum     *EnumNode
-	stateProperty *StatePropertyNode
-	handleEvent   *HandleEventNode
-	className     string
-	actionsName   string
-	actions       []string
+	Delegators    *EventDelegatorsNode
+	EventEnum     *EnumNode
+	StateEnum     *EnumNode
+	StateProperty *StatePropertyNode
+	HandleEvent   *HandleEventNode
+	ClassName     string
+	ActionsName   string
+	Actions       []string
 }
 
-func (fsmcn *FSMClassNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitFSMClassNode(fsmcn)
+func (fsmcn *FSMClassNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitFSMClassNode(fsmcn)
 }
 
 type HandleEventNode struct {
-	switchCase *SwitchCaseNode
+	SwitchCase *SwitchCaseNode
 }
 
 func NewHandleEventNode(switchCaseNode *SwitchCaseNode) *HandleEventNode {
 	return &HandleEventNode{
-		switchCase: switchCaseNode,
+		SwitchCase: switchCaseNode,
 	}
 }
 
-func (hen *HandleEventNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitHandleEventNode(hen)
+func (hen *HandleEventNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitHandleEventNode(hen)
 }
 
 type EnumeratorNode struct {
-	enumeration string
-	enumerator  string
+	Enumeration string
+	Enumerator  string
 }
 
 func NewEnumeratorNode(enumeration, enumerator string) *EnumeratorNode {
 	return &EnumeratorNode{
-		enumeration: enumeration,
-		enumerator:  enumerator,
+		Enumeration: enumeration,
+		Enumerator:  enumerator,
 	}
 }
 
-func (en *EnumeratorNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitEnumeratorNode(en)
+func (en *EnumeratorNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitEnumeratorNode(en)
 }
 
 type DefaultCaseNode struct {
@@ -171,6 +171,6 @@ func NewDefaultCaseNode(state string) *DefaultCaseNode {
 	}
 }
 
-func (dcn *DefaultCaseNode) Accept(visitor *NSCNodeVisitor) {
-	(*visitor).VisitDefaultCaseNode(dcn)
+func (dcn *DefaultCaseNode) Accept(visitor NSCNodeVisitor) {
+	visitor.VisitDefaultCaseNode(dcn)
 }

@@ -24,14 +24,14 @@ func (nsc *NSCGenerator) Generate(osm *optimizer.OptimizedStateMachine) *FSMClas
 
 func (nsc *NSCGenerator) makeFsmNode(osm *optimizer.OptimizedStateMachine) *FSMClassNode {
 	fsm := &FSMClassNode{}
-	fsm.className = osm.Header.Fsm
-	fsm.actionsName = osm.Header.Actions
-	fsm.stateEnum = nsc.stateEnumNode
-	fsm.eventEnum = nsc.eventEnumNode
-	fsm.delegators = nsc.eventDelegatorsNode
-	fsm.stateProperty = nsc.statePropertyNode
-	fsm.handleEvent = nsc.handleEventNode
-	fsm.actions = osm.Actions
+	fsm.ClassName = osm.Header.Fsm
+	fsm.ActionsName = osm.Header.Actions
+	fsm.StateEnum = nsc.stateEnumNode
+	fsm.EventEnum = nsc.eventEnumNode
+	fsm.Delegators = nsc.eventDelegatorsNode
+	fsm.StateProperty = nsc.statePropertyNode
+	fsm.HandleEvent = nsc.handleEventNode
+	fsm.Actions = osm.Actions
 	return fsm
 }
 
@@ -47,6 +47,7 @@ func (nsc *NSCGenerator) addStateCase(
 ) {
 	stateCaseNode := NewCaseNode("State", transition.CurrentState)
 	nsc.addEventCases(stateCaseNode, transition)
+	stateSwitch.CaseNodes = append(stateSwitch.CaseNodes, stateCaseNode)
 }
 
 func (nsc *NSCGenerator) addEventCases(
@@ -54,26 +55,28 @@ func (nsc *NSCGenerator) addEventCases(
 	transition *optimizer.Transition,
 ) {
 	eventSwitch := NewSwitchCaseNode("event")
-	stateCaseNode.caseActionNode = eventSwitch
+	stateCaseNode.CaseActionNode = eventSwitch
 	for _, st := range transition.SubTransitions {
 		nsc.addEventCase(eventSwitch, &st)
 	}
-	eventSwitch.caseNodes = append(eventSwitch.caseNodes, NewDefaultCaseNode(transition.CurrentState))
+	eventSwitch.CaseNodes = append(eventSwitch.CaseNodes, NewDefaultCaseNode(transition.CurrentState))
 }
 
 func (nsc *NSCGenerator) addEventCase(eventSwitch *SwitchCaseNode, st *optimizer.SubTransition) {
 	eventCaseNode := NewCaseNode("Event", st.Event)
 	nsc.addActions(st, eventCaseNode)
-	eventSwitch.caseNodes = append(eventSwitch.caseNodes, eventCaseNode)
+	eventSwitch.CaseNodes = append(eventSwitch.CaseNodes, eventCaseNode)
 }
 
 func (nsc *NSCGenerator) addActions(st *optimizer.SubTransition, eventCaseNode *CaseNode) {
 	actions := &CompositeNode{}
 	nsc.addSetStateNode(st.NextState, actions)
 	for _, action := range st.Actions {
-		functionCallNode := &FunctionCallNode{functionName: action}
+		functionCallNode := &FunctionCallNode{FunctionName: action}
 		actions.Add(functionCallNode)
 	}
+
+	eventCaseNode.CaseActionNode = actions
 }
 
 func (nsc *NSCGenerator) addSetStateNode(stateName string, actions *CompositeNode) {
