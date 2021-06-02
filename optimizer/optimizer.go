@@ -11,12 +11,6 @@ type Optimizer struct {
 	semanticStateMachine  semanticanalyzer.SemanticStateMachine
 }
 
-func New(semanticStateMachine semanticanalyzer.SemanticStateMachine) *Optimizer {
-	return &Optimizer{
-		semanticStateMachine: semanticStateMachine,
-	}
-}
-
 func Optimize(ast semanticanalyzer.SemanticStateMachine) *OptimizedStateMachine {
 	optimizer := Optimizer{
 		semanticStateMachine:  ast,

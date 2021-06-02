@@ -1,8 +1,7 @@
 package main
 
 import (
-
-	// "reflect"
+	"fmt"
 
 	"github.com/larkvincer/dsl-fsm/generator"
 	"github.com/larkvincer/dsl-fsm/generator/implementors"
@@ -11,8 +10,6 @@ import (
 	"github.com/larkvincer/dsl-fsm/parser"
 	"github.com/larkvincer/dsl-fsm/semanticanalyzer"
 )
-
-// "fmt"
 
 func main() {
 	const sourceInput = `Initial: Locked
@@ -44,9 +41,7 @@ func main() {
 		javaCodeGenerator := generator.NewJavaCodeGenerator(javaImplementor)
 		codeGenerator := generator.NewCodeGenerator(optimizedStateMachine, javaCodeGenerator)
 		codeGenerator.Generate()
-		// generator := implementors.NewJavaNestedSwitchCaseImplementor()
-		// generator.
 	} else {
-
+		fmt.Print(fsm.Errors)
 	}
 }
